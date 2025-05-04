@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS capstone DEFAULT CHARACTER SET utf8mb4;
+
+USE capstone;
+
+CREATE TABLE IF NOT EXISTS user_info (
+    orderNum INT AUTO_INCREMENT PRIMARY KEY,
+    id VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    sex ENUM('남성', '여성') NOT NULL,
+    birthday DATE NOT NULL,
+    phoneNum VARCHAR(15) NOT NULL,
+    email VARCHAR(100),
+    postNum VARCHAR(10) NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    detailAddress VARCHAR(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
