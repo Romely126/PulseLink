@@ -1,0 +1,15 @@
+# Eclipse metadata (삭제 원치 않으면 주석처리)
+# .settings/
+# .classpath
+# .project
+
+# Build output
+build/
+target/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
