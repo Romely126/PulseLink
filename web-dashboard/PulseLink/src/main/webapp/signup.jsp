@@ -43,21 +43,38 @@
             <label for="id" class="form-label">아이디</label>
             <div class="input-group">
                 <input type="text" class="form-control" id="id" name="id" required>
-                <button type="button" class="btn btn-secondary" onclick="checkDuplicate()">중복 확인</button>
+                <button type="button" class="btn btn-secondary" onclick="checkDuplicate()" style="height: 38px;">중복 확인</button>
             </div>
             <div id="idCheckResult" class="form-text"></div>
         </div>
 
         <!-- 비밀번호 -->
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
+<div class="mb-3">
+    <label for="password" class="form-label">비밀번호</label>
+    <input type="password" class="form-control" id="password" name="password" required>
+    <!-- 강도 게이지 -->
+    <div id="password-strength" class="progress mt-2" style="height: 8px;">
+        <div id="password-strength-bar" class="progress-bar" role="progressbar"
+             style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <!-- 텍스트 표시 -->
+    <div id="password-strength-text" class="mt-1 small"></div>
+</div>
+<!-- 비밀번호 확인 -->
+<div class="mb-3">
+    <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+</div>
 
-        <!-- 비밀번호 확인 -->
-        <div class="mb-3">
-            <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+        
+<!-- 닉네임 -->
+<div class="mb-3">
+            <label for="nickname" class="form-label">닉네임</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="nickname" name="nickname" required>
+                <button type="button" class="btn btn-secondary" onclick="checkNickname()" style="height: 38px;">중복 확인</button>
+            </div>
+            <div id="nicknameCheckResult" class="form-text"></div>
         </div>
 
         <!-- 이름 -->
@@ -103,23 +120,39 @@
 
 
         <!-- 이메일 -->
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" class="form-control" id="email" name="email">
-        </div>
+<div class="mb-3">
+    <label for="email" class="form-label">이메일</label>
+    <div class="d-flex align-items-center">
+        <input type="text" class="form-control me-1" id="emailId" name="emailId" placeholder="이메일 아이디" required style="width: 150px; height: 38px;">
+        <span class="me-1" style="margin-top: 2px;">@</span>
+        <input type="text" class="form-control me-1" id="emailDomain" name="emailDomain" placeholder="도메인" required style="width: 130px; height: 38px;">
+        <select class="form-select" id="emailSelect" style="width: 170px; height: 38px;">
+            <option value="">직접 입력</option>
+            <option value="gmail.com">gmail.com</option>
+            <option value="naver.com">naver.com</option>
+            <option value="daum.net">daum.net</option>
+            <option value="hanmail.net">hanmail.net</option>
+            <option value="outlook.com">outlook.com</option>
+        </select>
+    </div>
+</div>
 
         <!-- 주소 -->
         <div class="mb-3">
             <label for="post" class="form-label">우편번호</label>
             <div class="input-group mb-2">
                 <input type="text" class="form-control" id="post" name="post" readonly>
-                <button type="button" class="btn btn-outline-secondary" onclick="execDaumPostcode()">주소 찾기</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="execDaumPostcode()" style="height: 38px;">주소 찾기</button>
             </div>
             <input type="text" class="form-control mb-2" id="address" name="address" placeholder="기본주소" readonly>
             <input type="text" class="form-control" id="detailAddress" name="detailAddress" placeholder="상세주소">
         </div>
 
-        <button type="submit" class="btn btn-primary">회원가입</button>
+        <!-- 회원가입 버튼 영역 -->
+<div class="d-flex justify-content-end mt-4">
+  <button type="submit" class="btn btn-primary">회원가입</button>
+</div>
+
     </form>
 </div>
 
@@ -141,20 +174,93 @@
         });
     }
 
-    // 비밀번호 확인 실시간 검사
-    $('#confirmPassword, #password').on('input', function() {
-        const pw = $('#password').val();
-        const cpw = $('#confirmPassword').val();
-        const input = $('#confirmPassword');
+    //닉네임 중복 확인 AJAX
+    function checkNickname() {
+    const nickname = $('#nickname').val();
+    if (nickname.trim() === '') {
+        $('#nicknameCheckResult').text("닉네임을 입력하세요.").css("color", "red");
+        return;
+    }
 
-        if (cpw === '') {
-            input.removeClass('valid invalid');
-        } else if (pw === cpw) {
-            input.removeClass('invalid').addClass('valid');
+    $.post("checkNickname.jsp", { nickname: nickname }, function(response) {
+        if (response.trim() === "ok") {
+            $('#nicknameCheckResult').text("사용 가능한 닉네임입니다.").css("color", "green");
         } else {
-            input.removeClass('valid').addClass('invalid');
+            $('#nicknameCheckResult').text("이미 사용 중인 닉네임입니다.").css("color", "red");
         }
     });
+}
+	
+    // 비밀번호 강도 체크
+$('#password').on('input', function () {
+    const password = $('#password').val();
+    const bar = $('#password-strength-bar');
+    const text = $('#password-strength-text');
+
+    let strength = 0;
+
+    if (password.length >= 6) strength++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++; // 특수문자 포함
+    if (password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password)) strength++; // 복합 조건
+
+    // 초기화
+    bar.removeClass().addClass('progress-bar');
+
+    if (strength === 0 || strength === 1) {
+        bar.css({ width: '33%', backgroundColor: '#dc3545' }); // 빨강
+        text.text('비밀번호 강도: 약함').css('color', '#dc3545');
+    } else if (strength === 2) {
+        bar.css({ width: '66%', backgroundColor: '#198754' }); // 초록
+        text.text('비밀번호 강도: 보통').css('color', '#198754');
+    } else if (strength === 3) {
+        bar.css({ width: '100%', backgroundColor: '#6f42c1' }); // 보라색
+        text.text('비밀번호 강도: 강함').css('color', '#6f42c1');
+    } else {
+        bar.css({ width: '0%' });
+        text.text('');
+    }
+});
+
+
+    // 비밀번호 확인 실시간 검사
+$('#confirmPassword, #password').on('input', function() {
+    const pw = $('#password').val();
+    const confirmPw = $('#confirmPassword').val();
+
+    if (confirmPw === '') {
+        $('#confirmPassword').removeClass('valid invalid');
+    } else if (pw === confirmPw) {
+        $('#confirmPassword').addClass('valid').removeClass('invalid');
+    } else {
+        $('#confirmPassword').addClass('invalid').removeClass('valid');
+    }
+});
+
+    
+    //도메인 자동 채우기
+    $(document).ready(function () {
+        $('#emailSelect').on('change', function () {
+            const selected = $(this).val();
+            $('#emailDomain').val(selected);
+            if (selected === '') {
+                $('#emailDomain').prop('readonly', false).val('');
+            } else {
+                $('#emailDomain').prop('readonly', true);
+            }
+        });
+    });
+    
+    // 유효성 검사 실시간 적용
+    $('#signupForm').on('submit', function(e) {
+    const pw = $('#password').val();
+    const confirmPw = $('#confirmPassword').val();
+
+    if (pw !== confirmPw) {
+        alert('비밀번호가 일치하지 않습니다.');
+        e.preventDefault(); // 폼 제출 중단
+    }
+});
+
 </script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
@@ -169,6 +275,8 @@ function execDaumPostcode() {
         }
     }).open();
 }
+
+
 </script>
 </body>
 </html>
