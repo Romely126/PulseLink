@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">캡스톤</string>  <string name="login_title">로그인</string>
+    <string name="hint_user_id">사용자 ID를 입력하세요</string>
+    <string name="button_login_text">로그인</string>
+</resources>

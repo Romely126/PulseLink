@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ReceivedMessageActivity">
+
+    <TextView
+        android:id="@+id/tvConnectionStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="워치 상태: 확인 중..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvHeartRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="심박수: 대기 중..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvSpo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SpO2: 대기 중..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvSkinTemp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="온도: 대기 중..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위치: 대기 중..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvFallDetect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="낙상 감지: 없음"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLastUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="마지막 업데이트: -"
+        android:gravity="end"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+</LinearLayout>
